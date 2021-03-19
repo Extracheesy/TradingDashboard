@@ -301,21 +301,18 @@ def update_graphs(row_ids):
     global df_data_trade
     global df_data_stock
 
-    while True:
-        try:
-            id = row_ids[0]
-            break
-        except TypeError:
-            id = 0
-            break
+    #while True:
+    #    try:
+    #        id = row_ids[0]
+    #        break
+    #    except TypeError:
+    #        id = 0
+    #        break
 
-#    if row_ids is None:
-#        id = 0
-        # pandas Series works enough like a list for this to be OK
-        #row_ids = df['id']
-#    else:
-        #dff = df.loc[row_ids]
-#        id = 0
+    if row_ids is None:
+        id = 0
+    else:
+        id = row_ids[0]
 
     df_stk = df_data_stock.copy()
     df_trd = df_data_trade.copy()
