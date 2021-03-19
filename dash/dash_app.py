@@ -239,42 +239,6 @@ app.layout = html.Div([
     ]
 )
 
-
-
-'''
-# @app.callback(Output('tabs-content-inline', 'children'),
-@app.callback([Output(component_id='element-to-hide_tab1', component_property='style'),
-               Output(component_id='element-to-hide_tab2', component_property='style'),],
-# def render_content(tab, algo, policy, market):
-def render_content(tab):
-    if tab == 'tab-1':
-        #return {'display': 'block'} , {'display': 'none'}
-        return {'display': 'block'}
-    elif tab == 'tab-2':
-        #return {'display': 'none'} , {'display': 'none'}
-        return {'display': 'none'}
-    elif tab == 'tab-3':
-        #return {'display': 'none'} , {'display': 'none'}
-        return {'display': 'none'}
-    elif tab == 'tab-4':
-        #return {'display': 'none'} , {'display': 'none'}
-        return {'display': 'none'}
-'''
-
-
-
-"""
-@app.callback(
-    [Output("display_PF_asset_graph_1", "figure"),
-     Output("display_PF_asset_graph_2", "figure"),
-     Output("display_PF_asset_graph_3", "figure"),
-     Output("display_PF_asset_graph_4", "figure"),
-     Output("display_STK_asset_graph_1", "figure"),
-     Output("display_STK_asset_graph_2", "figure"),
-     Output("stock-row-ids", "data"), ],
-     [Input('trade-row-ids', 'derived_viewport_selected_row_ids'),
-      Input('stock-row-ids', 'derived_viewport_selected_row_ids'),])
-"""
 @app.callback(
     [Output("display_PF_asset_graph_1", "figure"),
      Output("display_PF_asset_graph_2", "figure"),
