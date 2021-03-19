@@ -224,13 +224,13 @@ app.layout = html.Div([
         html.Div(id="group_STK_asset_graph_1", children=[
 
             html.Div(dcc.Graph(id="display_STK_asset_graph_1", ),
-                     style={'display': 'inline-block', 'width': '31%'}, ),
+                     style={'display': 'inline-block', 'width': '33%'}, ),
 
             html.Div(dcc.Graph(id="display_STK_asset_graph_2", ),
-                     style={'display': 'inline-block', 'width': '31%'}, ),
+                     style={'display': 'inline-block', 'width': '33%'}, ),
 
             html.Div(dcc.Graph(id="display_STK_asset_graph_3", ),
-                     style={'display': 'inline-block', 'width': '31%'}, ),
+                     style={'display': 'inline-block', 'width': '33%'}, ),
 
         ], style={'display': 'inline-block', 'width': '100%'}
                  ),
@@ -313,6 +313,11 @@ def update_graphs(row_ids):
         id = 0
     else:
         id = row_ids[0]
+
+
+    while (len(df_data_stock) == 0):
+        print("waiting...")
+
 
     df_stk = df_data_stock.copy()
     df_trd = df_data_trade.copy()
