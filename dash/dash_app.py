@@ -7,6 +7,7 @@ import dash_html_components as html
 import dash_table
 from parse_input import parse_input_directory
 from parse_input import get_df_data_from_date
+from parse_input import offset_df_column_date
 
 from dash.dependencies import Input, Output
 from dash_table import DataTable
@@ -45,14 +46,6 @@ tab_selected_style = {
 
 
 app.layout = html.Div([
-
-        dcc.Tabs(id="tabs-styled-with-inline", value='tab-1', children=[
-            dcc.Tab(label='Tab 1', value='tab-1', style=tab_style, selected_style=tab_selected_style),
-            dcc.Tab(label='Tab 2', value='tab-2', style=tab_style, selected_style=tab_selected_style),
-            dcc.Tab(label='Tab 3', value='tab-3', style=tab_style, selected_style=tab_selected_style),
-            dcc.Tab(label='Tab 4', value='tab-4', style=tab_style, selected_style=tab_selected_style),
-        ], style=tabs_styles),
-
 
         dash_table.DataTable(
             id='trade-row-ids',
@@ -231,14 +224,16 @@ app.layout = html.Div([
         html.Div(id="group_STK_asset_graph_1", children=[
 
             html.Div(dcc.Graph(id="display_STK_asset_graph_1", ),
-                     style={'display': 'inline-block', 'width': '48%'}, ),
+                     style={'display': 'inline-block', 'width': '31%'}, ),
 
             html.Div(dcc.Graph(id="display_STK_asset_graph_2", ),
-                     style={'display': 'inline-block', 'width': '48%'}, ),
+                     style={'display': 'inline-block', 'width': '31%'}, ),
+
+            html.Div(dcc.Graph(id="display_STK_asset_graph_3", ),
+                     style={'display': 'inline-block', 'width': '31%'}, ),
+
         ], style={'display': 'inline-block', 'width': '100%'}
                  ),
-
-
 
 
     ]
@@ -309,6 +304,7 @@ def update_graphs(row_ids):
 
     df_data_trade = df_data
     df_data_stock = df_stocks_table
+    df_data_stock['id'] = df_data_stock.index
 
     ticker = df_stocks_table["tic"][id_stk]
 
@@ -332,34 +328,50 @@ def update_graphs(row_ids):
 
 @app.callback(
     [Output("display_STK_asset_graph_1", "figure"),
-     Output("display_STK_asset_graph_2", "figure"),],
-     Input('stock-row-ids', 'derived_viewport_selected_row_ids'),)
+     Output("display_STK_asset_graph_2", "figure"),
+     Output("display_STK_asset_graph_3", "figure"),],
+#     Input('stock-row-ids', 'derived_viewport_selected_row_ids'),)
+    Input('stock-row-ids', 'selected_row_ids'), )
 def update_graphs(row_ids):
 
     global df_data_trade
     global df_data_stock
 
-    #while True:
-    #    try:
-            #id = row_ids[0]
-    #        break
-    #    except TypeError:
-    #        id = 0
-    #        break
+    while True:
+        try:
+            id = row_ids[0]
+            break
+        except TypeError:
+            id = 0
+            break
 
-    id = 0
+#    if row_ids is None:
+#        id = 0
+        # pandas Series works enough like a list for this to be OK
+        #row_ids = df['id']
+#    else:
+        #dff = df.loc[row_ids]
+#        id = 0
 
     df_stk = df_data_stock.copy()
     df_trd = df_data_trade.copy()
 
     ticker = df_stk["tic"][id]
 
-    clnm = ticker + "_val_$"
-    fig_STK_val = px.line(df_trd, x="date",
-                          y=[clnm])
+    clnm_val = ticker + "_val_$"
+    clnm_flow = ticker + "_flow_$"
+    clnm_nb = ticker + "_nb"
 
-    clnm = ticker + "_flow_$"
-    fig_STK_flow = px.bar(df_trd, x="date",
-                          y=[clnm])
+    df_trd , df_trd_val = offset_df_column_date(df_trd, clnm_val, clnm_flow, clnm_nb)
 
-    return fig_STK_val, fig_STK_flow
+    fig_STK_val = px.line(df_trd, x="date", y=[clnm_val])
+
+    #fig_STK_flow = px.bar(df_trd_val, x="date", y=[clnm_flow, clnm_nb], barmode="group")
+
+    fig_STK_flow = px.bar(df_trd_val, x="date", y=[clnm_flow])
+
+    fig_STK_nb = px.bar(df_trd_val, x="date", y=[clnm_nb])
+
+    return fig_STK_val, fig_STK_flow, fig_STK_nb
+
+

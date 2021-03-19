@@ -180,3 +180,23 @@ def get_stocks_table(df):
 def get_percent( init_val, result):
 
     return ( (result - init_val) * 100 / init_val )
+
+
+def offset_df_column_date(df, clmn_val, clmn_flow, clmn_nb):
+
+    for clmn in df.columns:
+        if (clmn != "date") and (clmn != clmn_val) and (clmn != clmn_flow) and (clmn != clmn_nb):
+            df = df.drop(columns=clmn)
+
+    df_val = pd.DataFrame()
+
+    df_val["date"] = df["date"]
+    df_val[clmn_flow] = df[clmn_flow]
+    df_val[clmn_nb] = df[clmn_nb]
+
+    for i in range(len(df)-2):
+        df["date"][i] = df["date"][i+1]
+
+    df = df[:-2]
+    df_val = df_val[1:]
+    return df, df_val
