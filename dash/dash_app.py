@@ -270,7 +270,7 @@ def update_graphs(row_ids):
     df_data_stock = df_stocks_table
     df_data_stock['id'] = df_data_stock.index
 
-    ticker = df_stocks_table["tic"][id_stk]
+    #ticker = df_stocks_table["tic"][id_stk]
 
     table_data = df_stocks_table.to_dict('records')
 
