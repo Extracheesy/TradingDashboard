@@ -64,13 +64,11 @@ app.layout = html.Div([
                 {'name': 'date', 'id': 'date', 'type': 'any', 'editable': False},
                 {'name': 'iter', 'id': 'iter', 'type': 'numeric', 'editable': False},
                 {'name': '$_daily', 'id': '$_daily', 'type': 'numeric', 'editable': False},
-                {'name': '%_daily', 'id': '%_daily', 'type': 'numeric', 'editable': False},
                 {'name': '$_max', 'id': '$_max', 'type': 'numeric', 'editable': False},
+                {'name': '%_daily', 'id': '%_daily', 'type': 'numeric', 'editable': False},
                 {'name': '%_max', 'id': '%_max', 'type': 'numeric', 'editable': False},
                 {'name': '$_min', 'id': '$_min', 'type': 'numeric', 'editable': False},
                 {'name': '%_min', 'id': '%_min', 'type': 'numeric', 'editable': False},
-                {'name': '$_mean', 'id': '$_mean', 'type': 'numeric', 'editable': False},
-                {'name': '%_mean', 'id': '%_mean', 'type': 'numeric', 'editable': False},
             ],
             style_data_conditional=[
                 {
@@ -178,9 +176,10 @@ app.layout = html.Div([
                 {'name': 'tic', 'id': 'tic', 'type': 'numeric', 'editable': False},
                 {'name': 'open', 'id': 'open', 'type': 'numeric', 'editable': False},
                 {'name': 'close', 'id': 'close', 'type': 'numeric', 'editable': False},
-                {'name': 'trend', 'id': 'trend', 'type': 'any', 'editable': False},
                 {'name': 'high', 'id': 'high', 'type': 'numeric', 'editable': False},
                 {'name': 'low', 'id': 'low', 'type': 'numeric', 'editable': False},
+                {'name': 'trend', 'id': 'trend', 'type': 'any', 'editable': False},
+                {'name': 'delta', 'id': 'delta', 'type': 'any', 'editable': False},
                 {'name': 'earning', 'id': 'earning', 'type': 'numeric', 'editable': False},
             ],
             data=[],
@@ -198,6 +197,22 @@ app.layout = html.Div([
                     'if': {
                         'filter_query': '{earning} < 0',
                         'column_id': 'earning'
+                    },
+                    'backgroundColor': 'tomato',
+                    'color': 'white'
+                },
+                {
+                    'if': {
+                        'filter_query': '{delta} > 0',
+                        'column_id': 'delta'
+                    },
+                    'backgroundColor': 'blue',
+                    'color': 'white'
+                },
+                {
+                    'if': {
+                        'filter_query': '{delta} < 0',
+                        'column_id': 'delta'
                     },
                     'backgroundColor': 'tomato',
                     'color': 'white'
@@ -269,8 +284,6 @@ def update_graphs(row_ids):
     df_data_trade = df_data
     df_data_stock = df_stocks_table
     df_data_stock['id'] = df_data_stock.index
-
-    #ticker = df_stocks_table["tic"][id_stk]
 
     table_data = df_stocks_table.to_dict('records')
 

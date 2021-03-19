@@ -36,8 +36,6 @@ def parse_input_directory():
     df_trade_list.insert(len(df_trade_list.columns), "%_max", 0)
     df_trade_list.insert(len(df_trade_list.columns), "$_min", 0)
     df_trade_list.insert(len(df_trade_list.columns), "%_min", 0)
-    df_trade_list.insert(len(df_trade_list.columns), "$_mean", 0)
-    df_trade_list.insert(len(df_trade_list.columns), "%_mean", 0)
 
     listOfFilesToRemove = os.listdir('./')
     pattern = "*.csv"
@@ -65,14 +63,7 @@ def parse_input_directory():
             list_data.append(min)
             min = round(df["total_$"].min() * 100 / df["total_$"][0],3)
             list_data.append(min)
-            mean = round(df["total_$"].mean(),0)
-            list_data.append(mean)
-            mean = round(df["total_$"].mean() * 100 / df["total_$"][0],1)
-            list_data.append(mean)
             df_trade_list = addRow(df_trade_list, list_data)
-
-    #df_trade_list = df_trade_list.sort_values(['%_daily'], ascending=True, ignore_index=True)
-    #df_trade_list = df_trade_list.sort_values(['%_daily'], ascending=True)
 
     os.chdir("./..")
     print("back to root: ", os.getcwd())
@@ -145,6 +136,7 @@ def get_stocks_table(df):
     df_stk.insert(len(df_stk.columns), "trend", 0)
     df_stk.insert(len(df_stk.columns), "high", 0)
     df_stk.insert(len(df_stk.columns), "low", 0)
+    df_stk.insert(len(df_stk.columns), "delta", 0)
     df_stk.insert(len(df_stk.columns), "earning", 0)
 
     for column in df.columns:
@@ -158,9 +150,6 @@ def get_stocks_table(df):
             list_data.append(open)
             close = round(df[column][len(df) - 2],2)
             list_data.append(close)
-            toto = df[column][len(df) - 1]
-            titi = df[column][0]
-            tata = toto - titi
             if(( df[column][len(df) - 2] - df[column][0] ) >= 0):
                 list_data.append("up")
             else:
@@ -169,10 +158,9 @@ def get_stocks_table(df):
             list_data.append(high)
             low = round(df[column].min(),2)
             list_data.append(low)
-
+            list_data.append(round(close - open,2))
             earning = round(df[tic + "_flow_$"].sum(), 2)
             list_data.append(earning)
-
             df_stk = addRow(df_stk, list_data)
 
     return df_stk
